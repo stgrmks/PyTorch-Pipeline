@@ -17,7 +17,7 @@ class tinyImageNet(Dataset):
         self.transform = transform
 
     def __len__(self):
-        return 500#len(self.filenames)
+        return len(self.filenames)
 
     def __getitem__(self, idx):
         img = Image.open(self.filenames[idx]).convert('RGB')

@@ -54,7 +54,7 @@ def model_evaluation(experiment_name, path = '/media/msteger/storage/resources/t
         batch_size = batch_size,
         device = device,
         LE = LE,
-        # checkpoint_path = '/media/msteger/storage/resources/DreamPhant/models/{}/2018-06-05 20:35:22.740193__0.359831720591__449.pkl'.format(experiment_name),
+        checkpoint_path = None,
         verbose = True
     )
     training.fit(epochs = 500, train_data = data_loaders['train'], val_data = data_loaders['val'], \
@@ -66,11 +66,11 @@ def model_evaluation(experiment_name, path = '/media/msteger/storage/resources/t
                          # ('sk_accuracy_score', metrics.sk_accuracy_score),
                          # ('sk_f1_weighted', partial(metrics.sk_f1_score, average = 'weighted')),
                          # ('sk_f1_macro', partial(metrics.sk_f1_score, average='macro')),
-                     ], save_folder_path = r'/media/msteger/storage/resources/DreamPhant/logs/{}/MetricTracker/'.format(experiment_name)),
+                     ], save_folder_path = r'/media/msteger/storage/resources/PyTorch-Pipeline/logs/{}/MetricTracker/'.format(experiment_name)),
                      ProgressBar(show_batch_metrics = ['log_loss']),
-                     ModelCheckpoint(save_folder_path = r'/media/msteger/storage/resources/DreamPhant/models/{}/'.format(experiment_name), metric = 'log_loss', best_metric_highest = False, best_only = False, write_frequency = 2, verbose = True),
-                     TensorBoard(log_dir = r'/media/msteger/storage/resources/DreamPhant/logs/{}/TensorBoard/'.format(experiment_name), update_frequency = 1),
-                     EarlyStopping(save_folder_path=r'/media/msteger/storage/resources/DreamPhant/models/{}/'.format(experiment_name), metric='accuracy_score', best_metric_highest=True, best_only=True, write_frequency=2, patience=10, verbose=True),
+                     # ModelCheckpoint(save_folder_path = r'/media/msteger/storage/resources/PyTorch-Pipeline/models/{}/'.format(experiment_name), metric = 'log_loss', best_metric_highest = False, best_only = False, write_frequency = 2, verbose = True),
+                     TensorBoard(log_dir = r'/media/msteger/storage/resources/PyTorch-Pipeline/logs/{}/TensorBoard/'.format(experiment_name), update_frequency = 1),
+                     EarlyStopping(save_folder_path=r'/media/msteger/storage/resources/PyTorch-Pipeline/models/{}/'.format(experiment_name), metric='accuracy_score', best_metric_highest=True, best_only=True, write_frequency=2, patience=10, min_delta =0, verbose=True),
 
                  ])
 
