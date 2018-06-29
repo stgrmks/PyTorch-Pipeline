@@ -10,7 +10,7 @@ from components.callbacks import MetricTracker, ProgressBar, ModelCheckpoint, Te
 from components import metrics
 from functools import partial
 
-def model_evaluation(experiment_name, path = '/media/msteger/storage/resources/tiny-imagenet-200'):
+def model_evaluation(experiment_name, model, path = '/media/msteger/storage/resources/tiny-imagenet-200'):
 
     # setup
     batch_size = 128
@@ -43,8 +43,7 @@ def model_evaluation(experiment_name, path = '/media/msteger/storage/resources/t
     LE = LabelEncoder().fit(range(2))
 
     # model
-    device = torch.device('cuda')
-    model = pretrainedNetwork(input_shape = (3, 224, 224), freeze_layers=None, replace_clf=True, num_class=2)
+    device = torch.device('cpu')
 
     # training
     training = networkTraining(
@@ -78,5 +77,6 @@ def model_evaluation(experiment_name, path = '/media/msteger/storage/resources/t
 
 
 if __name__ == '__main__':
-    model_evaluation(path = '/media/msteger/storage/resources/DreamPhant/datasets', experiment_name = r'test3')
+    model = pretrainedNetwork(input_shape = (3, 224, 224), freeze_layers=range(34), replace_clf=True, num_class=2)
+    model_evaluation(path = '/media/msteger/storage/resources/DreamPhant/datasets', model = model, experiment_name = r'test3')
     print 'done'

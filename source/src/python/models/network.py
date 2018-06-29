@@ -9,8 +9,9 @@ from components.summary import summary
 from itertools import chain
 
 class pretrainedNetwork(nn.Module):
+    # TODO: handle replace_clf differently. if yes 0> replace last layer. if nn.Sequential 0> replace
 
-    def __init__(self, pretrained_models = models.alexnet(pretrained=True) , input_shape = (3, 224, 224), num_class = 200, freeze_layers = range(5), replace_clf=True):
+    def __init__(self, pretrained_models = models.vgg16(pretrained=True) , input_shape = (3, 224, 224), num_class = 200, freeze_layers = range(5), replace_clf=True):
         super(pretrainedNetwork, self).__init__()
         self.features, self.classifier = pretrained_models.features, pretrained_models.classifier
         self.flat_fts = self.get_flat_fts(input_shape, self.features)
