@@ -4,10 +4,9 @@ import torch
 from torch import nn
 from models.network import pretrainedNetwork, networkTraining
 from torchvision import transforms, models
-from components.preprocessing import loaders, PhantDataset
+from components import loaders, PhantDataset, metrics
 from sklearn.preprocessing import LabelEncoder
-from components.callbacks import MetricTracker, ProgressBar, ModelCheckpoint, TensorBoard, EarlyStopping
-from components import metrics
+from components import MetricTracker, ProgressBar, TensorBoard, EarlyStopping
 from functools import partial
 
 def model_evaluation(experiment_name, model, path = '/data/tiny-imagenet-200'):
