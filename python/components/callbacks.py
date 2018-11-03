@@ -217,8 +217,8 @@ class TensorBoard(Callback):
     def on_train_begin(self, **_):
         self.writer = SummaryWriter(os.path.join(self.log_dir, datetime.datetime.now().__str__()))
         rndm_input = torch.autograd.Variable(torch.rand(1, *self.model.input_shape), requires_grad = True).to(self.logger['device'])
-        fwd_pass = self.model(rndm_input)
-        self.writer.add_graph(self.model, fwd_pass)
+        # fwd_pass = self.model(rndm_input)
+        self.writer.add_graph(self.model, rndm_input)
         return self
 
     def on_epoch_end(self, **_):

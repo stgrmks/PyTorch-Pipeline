@@ -5,7 +5,7 @@ import numpy as np
 
 class summary(object):
 
-    def __init__(self, model, device = torch.device('cpu'), input_size=(1,1,256,256), verbose = True):
+    def __init__(self, model, device, input_size=(1,1,256,256), verbose = True):
         self.model = model.to(device)
         self.input_size = input_size
         self.device = device

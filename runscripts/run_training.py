@@ -3,14 +3,14 @@ _author__ = 'MSteger'
 import torch
 from torch import nn
 from models.network import pretrainedNetwork, networkTraining
-from torchvision import transforms
+from torchvision import transforms, models
 from components.preprocessing import loaders, PhantDataset
 from sklearn.preprocessing import LabelEncoder
 from components.callbacks import MetricTracker, ProgressBar, ModelCheckpoint, TensorBoard, EarlyStopping
 from components import metrics
 from functools import partial
 
-def model_evaluation(experiment_name, model, path = '/media/msteger/storage/resources/tiny-imagenet-200'):
+def model_evaluation(experiment_name, model, path = '/data/tiny-imagenet-200'):
 
     # setup
     batch_size = 128
@@ -40,10 +40,10 @@ def model_evaluation(experiment_name, model, path = '/media/msteger/storage/reso
     data_loaders = loaders(path = path, dataset = PhantDataset, transformers = data_transformers, batch_size = batch_size, shuffle = True, num_workers = 4, pin_memory = True)
     # data_organization= tinyImageNet_Prepare(path = path)
     # classes = data_organization.get_classes(classes_lst = None)
-    LE = LabelEncoder().fit(range(2))
+    LE = LabelEncoder().fit(['0', '1'])
 
     # model
-    device = torch.device('cpu')
+    device = torch.device('cuda')
 
     # training
     training = networkTraining(
@@ -65,11 +65,11 @@ def model_evaluation(experiment_name, model, path = '/media/msteger/storage/reso
                          # ('sk_accuracy_score', metrics.sk_accuracy_score),
                          # ('sk_f1_weighted', partial(metrics.sk_f1_score, average = 'weighted')),
                          # ('sk_f1_macro', partial(metrics.sk_f1_score, average='macro')),
-                     ], save_folder_path = r'/media/msteger/storage/resources/PyTorch-Pipeline/logs/{}/MetricTracker/'.format(experiment_name)),
+                     ], save_folder_path = r'/data/PyTorch-Pipeline/logs/{}/MetricTracker/'.format(experiment_name)),
                      ProgressBar(show_batch_metrics = ['log_loss']),
-                     # ModelCheckpoint(save_folder_path = r'/media/msteger/storage/resources/PyTorch-Pipeline/models/{}/'.format(experiment_name), metric = 'log_loss', best_metric_highest = False, best_only = False, write_frequency = 2, verbose = True),
-                     TensorBoard(log_dir = r'/media/msteger/storage/resources/PyTorch-Pipeline/logs/{}/TensorBoard/'.format(experiment_name), update_frequency = 1),
-                     EarlyStopping(save_folder_path=r'/media/msteger/storage/resources/PyTorch-Pipeline/models/{}/'.format(experiment_name), metric='accuracy_score', best_metric_highest=True, best_only=True, write_frequency=2, patience=10, min_delta =0, verbose=True),
+                     # ModelCheckpoint(save_folder_path = r'/data/PyTorch-Pipeline/models/{}/'.format(experiment_name), metric = 'log_loss', best_metric_highest = False, best_only = False, write_frequency = 2, verbose = True),
+                     TensorBoard(log_dir = r'/data/PyTorch-Pipeline/logs/{}/TensorBoard/'.format(experiment_name), update_frequency = 1),
+                     EarlyStopping(save_folder_path=r'/data/PyTorch-Pipeline/models/{}/'.format(experiment_name), metric='accuracy_score', best_metric_highest=True, best_only=True, write_frequency=2, patience=10, min_delta =0, verbose=True),
 
                  ])
 
@@ -77,6 +77,7 @@ def model_evaluation(experiment_name, model, path = '/media/msteger/storage/reso
 
 
 if __name__ == '__main__':
-    model = pretrainedNetwork(input_shape = (3, 224, 224), freeze_layers=range(34), replace_clf=True, num_class=2)
-    model_evaluation(path = '/media/msteger/storage/resources/DreamPhant/datasets', model = model, experiment_name = r'test3')
+
+    model = pretrainedNetwork(pretrained_models = models.alexnet(pretrained=True), input_shape = (3, 224, 224), freeze_layers=range(15), replace_clf=True, num_class=2)
+    model_evaluation(path = '/data/DreamPhant/datasets', model = model, experiment_name = r'test7')
     print 'done'
